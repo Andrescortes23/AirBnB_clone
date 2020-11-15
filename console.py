@@ -3,7 +3,6 @@
 """ Console Module """
 
 import cmd
-import sys
 from models import storage
 from models.amenity import Amenity
 from models.base_model import BaseModel
@@ -12,6 +11,7 @@ from models.place import Place
 from models.review import Review
 from models.state import State
 from models.user import User
+from sys import exit
 
 
 class HBNBCommand(cmd.Cmd):
@@ -19,12 +19,10 @@ class HBNBCommand(cmd.Cmd):
         shell for the specific purpose of the HBNB project.
 
         Attributes:
-            intro (string): The intro message shown when the cmd is called.
             prompt (string): The prompt message shown when requesting an input.
     """
 
     prompt = "(hbnb) "
-    intro = None
 
     def do_all(self, arg):
         """ Prints all string representation of all instances based or
@@ -70,7 +68,6 @@ class HBNBCommand(cmd.Cmd):
 
         if args[0] == '':
             print("** class name missing **")
-
         elif args[0] in {"Amenity", "BaseModel", "City", "Place", "Review",
                          "State", "User"}:
             if args[0] == "Amenity":
@@ -87,10 +84,8 @@ class HBNBCommand(cmd.Cmd):
                 new_obj = State()
             elif args[0] == "User":
                 new_obj = User()
-
             new_obj.save()
             print(new_obj.id)
-
         else:
             print("** class doesn't exist **")
 
@@ -105,7 +100,6 @@ class HBNBCommand(cmd.Cmd):
 
         if args[0] == '':
             print("** class name missing **")
-
         elif args[0] in {"Amenity", "BaseModel", "City", "Place", "Review",
                          "State", "User"}:
             if len(args) >= 2:
@@ -117,7 +111,6 @@ class HBNBCommand(cmd.Cmd):
                     print("** no instance found **")
             else:
                 print("** instance id missing **")
-
         else:
             print("** class doesn't exist **")
 
@@ -127,7 +120,7 @@ class HBNBCommand(cmd.Cmd):
             Ex: (hbnb) EOF.
         """
 
-        sys.exit()
+        exit()
 
     def do_quit(self, arg):
         """ Quit command to exit the program.
@@ -135,7 +128,7 @@ class HBNBCommand(cmd.Cmd):
             Ex: (hbnb) quit.
         """
 
-        sys.exit()
+        exit()
 
     def do_show(self, arg):
         """ Prints the string representation of an instance based on
@@ -148,19 +141,18 @@ class HBNBCommand(cmd.Cmd):
 
         if args[0] == '':
             print("** class name missing **")
-
         elif args[0] in {"Amenity", "BaseModel", "City", "Place", "Review",
                          "State", "User"}:
             if len(args) >= 2:
                 for value in storage.all().values():
-                    if value.id == args[1]:
+                    if (value.__class__.__name__ == args[0] and
+                            value.id == args[1]):
                         print(value)
                         break
                 else:
                     print("** no instance found **")
             else:
                 print("** instance id missing **")
-
         else:
             print("** class doesn't exist **")
 
@@ -175,7 +167,6 @@ class HBNBCommand(cmd.Cmd):
 
         if args[0] == '':
             print("** class name missing **")
-
         elif args[0] in {"Amenity", "BaseModel", "City", "Place", "Review",
                          "State", "User"}:
             if len(args) >= 4:
@@ -193,9 +184,10 @@ class HBNBCommand(cmd.Cmd):
                 print("** attribute name missing **")
             elif len(args) == 3:
                 print("** value missing **")
-
         else:
             print("** class doesn't exist **")
+
+# Auxiliar functiona
 
     def emptyline(self):
         """ Does nothing when an empty line is passed as argument to the
